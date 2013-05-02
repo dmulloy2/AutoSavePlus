@@ -1,0 +1,18 @@
+# AutoSavePlus Configuration
+# By dmulloy2
+
+# Delay in minutes between saves
+delay: 15
+
+# Messages broadcast to the server when save occurs
+start: '&d[Server] **Saving all worlds and player data**'
+finish: '&d[Server] **Save Complete!**'
+
+# Worlds to save
+worlds:
+- world
+- world_nether
+- world_the_end
+  
+# Extra output to console
+debug: false
