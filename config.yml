@@ -1,5 +1,5 @@
 # AutoSavePlus Configuration
-# By dmulloy2
+# (c) 2013 dmulloy2
 
 # Delay in minutes between saves
 delay: 15
@@ -16,3 +16,6 @@ worlds:
   
 # Extra output to console
 debug: false
+
+# Log the saving of players and worlds (does not affect broadcasts)
+logAllWorlds: true

@@ -37,24 +37,24 @@ public class AutoSavePlusCommand implements CommandExecutor
 				if (sender.hasPermission("asp.reload"))
 				{
 					plugin.reload();
-					sender.sendMessage(ChatColor.GREEN + "Reloading AutoSavePlus!");
+					sender.sendMessage(plugin.prefix + ChatColor.GREEN + "Reloading AutoSavePlus!");
 				}
 				else
 				{
-					sender.sendMessage(ChatColor.RED + "You do not have permission to do this!");
+					sender.sendMessage(plugin.prefix + ChatColor.RED + "You do not have permission to do this!");
 				}
 			}
 			else if (args[0].equalsIgnoreCase("save"))
 			{
 				if (sender.hasPermission("asp.save"))
 				{
-					sender.sendMessage(ChatColor.GREEN + "Saving all worlds!");
-					if (plugin.debug) plugin.outConsole(sender.getName() + " is saving all worlds");
-					AutoSaveManager.run();
+					sender.sendMessage(plugin.prefix + ChatColor.GREEN + "Saving worlds and player data!");
+					if (plugin.debug) plugin.outConsole(sender.getName() + " is forcing a save!");
+					plugin.getAutoSaveManager().run();
 				}
 				else
 				{
-					sender.sendMessage(ChatColor.RED + "You do not have permission to do this!");
+					sender.sendMessage(plugin.prefix + ChatColor.RED + "You do not have permission to do this!");
 				}
 			}
 			else

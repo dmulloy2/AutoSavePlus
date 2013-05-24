@@ -4,6 +4,10 @@
 package net.dmulloy2.autosaveplus;
 
 import java.util.logging.Level;
+
+import lombok.Getter;
+
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -13,9 +17,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class AutoSavePlus extends JavaPlugin
 {
-	public static AutoSavePlus p;
-	public String start, finish;
-	public boolean debug;
+	private @Getter AutoSaveManager autoSaveManager;
+	
+	public String start, finish, prefix;
+	public boolean debug, logAllWorlds;
 	public int delay;
 	
 	@Override
@@ -23,8 +28,10 @@ public class AutoSavePlus extends JavaPlugin
 	{
 		long start = System.currentTimeMillis();
 		
-		p = this;
+		autoSaveManager = new AutoSaveManager(this);
 		
+		prefix = ChatColor.GOLD + "[AutoSavePlus] ";
+
 		/**Set command executor**/
 		getCommand("asp").setExecutor(new AutoSavePlusCommand (this));
 		
@@ -45,7 +52,7 @@ public class AutoSavePlus extends JavaPlugin
 	{
 		long start = System.currentTimeMillis();
 		
-		AutoSaveManager.run();
+		autoSaveManager.run();
 		
 		/**Cancel AutoSave task**/
 		getServer().getScheduler().cancelTasks(this);
@@ -73,6 +80,7 @@ public class AutoSavePlus extends JavaPlugin
 		finish = getConfig().getString("finish");
 		delay = getConfig().getInt("delay");
 	    debug = getConfig().getBoolean("debug");
+	    logAllWorlds = getConfig().getBoolean("logAllWorlds");
 	}
 
 	/**Reload the Plugin**/
@@ -88,7 +96,7 @@ public class AutoSavePlus extends JavaPlugin
 		@Override
 		public void run() 
 		{
-			AutoSaveManager.run();
+			autoSaveManager.run();
 		}
 	}
 }

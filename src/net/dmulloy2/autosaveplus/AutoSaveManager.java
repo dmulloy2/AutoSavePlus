@@ -15,33 +15,46 @@ import org.bukkit.World;
 
 public class AutoSaveManager 
 {
-	public static List<String> worlds = AutoSavePlus.p.getConfig().getStringList("worlds");
-	
-	public static void run()
+	public AutoSavePlus plugin;
+	public AutoSaveManager(AutoSavePlus plugin)
 	{
-		AutoSavePlus.p.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', AutoSavePlus.p.start));
-		
+		this.plugin = plugin;
+	}
+
+	public void run()
+	{
 		long start = System.currentTimeMillis();
 		
+		plugin.outConsole("Saving worlds and player data!");
+		
+		plugin.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', plugin.start));
+		
+		List<String> worlds = plugin.getConfig().getStringList("worlds");
 		for (String string : worlds)
 		{
-			World world = AutoSavePlus.p.getServer().getWorld(string);
+			World world = plugin.getServer().getWorld(string);
 			if (world != null)
 			{
-				AutoSavePlus.p.outConsole("Saving world: " + world.getName());
+				if (plugin.logAllWorlds)
+				{
+					plugin.outConsole("Saving world: " + world.getName());
+				}
 				world.save();
 			}
 			else
 			{
-				AutoSavePlus.p.outConsole(Level.WARNING, "Error Saving World: \""+string+"\". Does it exist?");
+				plugin.outConsole(Level.WARNING, "Error Saving World: \""+string+"\". Does it exist?");
 			}
 		}
 		
-		AutoSavePlus.p.outConsole("Saving players");
-		AutoSavePlus.p.getServer().savePlayers();
+		if (plugin.logAllWorlds)
+		{
+			plugin.outConsole("Saving players");
+		}
+		plugin.getServer().savePlayers();
 		
-		AutoSavePlus.p.outConsole("Save Complete. ("+(System.currentTimeMillis() - start)+"ms)");
+		plugin.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', plugin.finish));
 		
-		AutoSavePlus.p.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', AutoSavePlus.p.finish));
+		plugin.outConsole("Save Complete. ("+(System.currentTimeMillis() - start)+"ms)");
 	}
 }
