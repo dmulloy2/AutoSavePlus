@@ -21,6 +21,8 @@ import java.util.logging.Level;
 
 import lombok.Getter;
 
+import net.dmulloy2.autosaveplus.util.FormatUtil;
+
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -58,7 +60,8 @@ public class AutoSavePlus extends JavaPlugin
 		new AutoSaveTask().runTaskTimer(this, delaym, delaym);
 		
 		long finish = System.currentTimeMillis();
-		outConsole(getDescription().getFullName() + " has been enabled ("+(finish-start)+"ms)");
+
+		outConsole("{0} has been enabled ({1}ms)", getDescription().getFullName(), finish - start);
 	}
 	
 	@Override
@@ -72,19 +75,25 @@ public class AutoSavePlus extends JavaPlugin
 		getServer().getScheduler().cancelTasks(this);
 		
 		long finish = System.currentTimeMillis();
-		
-		outConsole(getDescription().getFullName() + " has been disabled ("+(finish-start)+"ms)");
+
+		outConsole("{0} has been disabled ({1}ms)", getDescription().getFullName(), finish - start);
 	}
 	
 	/**Console Logging**/
-	public void outConsole(String string)
+	public void outConsole(String string, Object... objects)
 	{
-		getLogger().info(string);
+		outConsole(Level.INFO, string, objects);
 	}
 	
-	public void outConsole(Level level, String string)
+	public void outConsole(Level level, String string, Object... objects)
 	{
-		getLogger().log(level, string);
+		getLogger().log(level, FormatUtil.getLogString(string, objects));
+	}
+	
+	public void debug(String string, Object... objects)
+	{
+		if (debug)
+			outConsole("[Debug] " + string, objects);
 	}
 	
 	/**Load Configuration**/

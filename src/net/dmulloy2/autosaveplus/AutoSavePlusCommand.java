@@ -1,6 +1,3 @@
-/**
- * (c) 2013 dmulloy2
- */
 package net.dmulloy2.autosaveplus;
 
 import org.bukkit.ChatColor;
@@ -14,56 +11,64 @@ import org.bukkit.command.CommandSender;
 
 public class AutoSavePlusCommand implements CommandExecutor
 {
-	public AutoSavePlus plugin;
-	public AutoSavePlusCommand(AutoSavePlus plugin)  
+	private final AutoSavePlus plugin;
+	public AutoSavePlusCommand(final AutoSavePlus plugin)  
 	{
 		this.plugin = plugin;
 	}	
 	  
+	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
+	{
+		perform(sender, args);
+		return true;
+	}
+	
+	public void perform(CommandSender sender, String[] args)
 	{
 		if (args.length == 0)
 		{
 			displayHelp(sender);
-		}	
-		else
-		{
-			if (args[0].equalsIgnoreCase("help"))
-			{
-				  displayHelp(sender);
-			}
-			else if (args[0].equalsIgnoreCase("reload"))
-			{
-				if (sender.hasPermission("asp.reload"))
-				{
-					plugin.reload();
-					sender.sendMessage(plugin.prefix + ChatColor.GREEN + "Reloading AutoSavePlus!");
-				}
-				else
-				{
-					sender.sendMessage(plugin.prefix + ChatColor.RED + "You do not have permission to do this!");
-				}
-			}
-			else if (args[0].equalsIgnoreCase("save"))
-			{
-				if (sender.hasPermission("asp.save"))
-				{
-					sender.sendMessage(plugin.prefix + ChatColor.GREEN + "Saving worlds and player data!");
-					if (plugin.debug) plugin.outConsole(sender.getName() + " is forcing a save!");
-					plugin.getAutoSaveManager().run();
-				}
-				else
-				{
-					sender.sendMessage(plugin.prefix + ChatColor.RED + "You do not have permission to do this!");
-				}
-			}
-			else
-			{
-				displayHelp(sender);
-			}
+			return;
 		}
-		  
-		return true;
+		
+		if (args[0].equalsIgnoreCase("help"))
+		{
+			displayHelp(sender);
+			return;
+		}
+		
+		if (args[0].equalsIgnoreCase("reload"))
+		{
+			if (! sender.hasPermission("asp.reload"))
+			{
+				sender.sendMessage(plugin.prefix + ChatColor.RED + "You do not have permission to do this!");
+				return;
+			}
+			
+			sender.sendMessage(plugin.prefix + ChatColor.GREEN + "Reloading AutoSavePlus!");
+			
+			plugin.reload();
+			
+			sender.sendMessage(plugin.prefix + ChatColor.GREEN + "Reload complete!");
+			return;
+		}
+		
+		if (args[0].equalsIgnoreCase("save"))
+		{
+			if (! sender.hasPermission("asp.save"))
+			{
+				sender.sendMessage(plugin.prefix + ChatColor.RED + "You do not have permission to do this!");
+			}
+			
+			sender.sendMessage(plugin.prefix + ChatColor.GREEN + "Saving worlds and player data!");
+			plugin.debug(sender.getName() + " is forcing a save!");
+			plugin.getAutoSaveManager().run();
+			return;
+		}
+		
+		displayHelp(sender);
+		return;
 	}
 
 	private void displayHelp(CommandSender sender) 
