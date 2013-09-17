@@ -1,6 +1,6 @@
 name: AutoSavePlus
 main: net.dmulloy2.autosaveplus.AutoSavePlus
-version: 1.2.1
+version: 1.3
 description: Simple AutoSave plugin allowing the saving of individual worlds, defined in the configuration.
 author: dmulloy2
 commands:
@@ -9,14 +9,14 @@ commands:
     aliases: [autosave, autosaveplus]
     usage: /<command> <args>
 permissions:
-  asp.*:
+  autosaveplus.*:
     description: Allows access to all AutoSavePlus commands
     children:
       asp.save: true
       asp.reload: true
-  asp.save:
+  autosaveplus.save:
     description: Allows a player to force a world save
     default: false
-  asp.reload:
+  autosaveplus.reload:
     description: Allows a player to reload the plugin
     default: false

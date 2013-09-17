@@ -10,9 +10,7 @@ finish: '&d[Server] **Save Complete!**'
 
 # Worlds to save
 worlds:
-- world
-- world_nether
-- world_the_end
+- "*"
   
 # Extra output to console
 debug: false

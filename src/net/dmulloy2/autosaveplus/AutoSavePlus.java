@@ -20,10 +20,15 @@ package net.dmulloy2.autosaveplus;
 import java.util.logging.Level;
 
 import lombok.Getter;
-
+import net.dmulloy2.autosaveplus.commands.CmdHelp;
+import net.dmulloy2.autosaveplus.commands.CmdReload;
+import net.dmulloy2.autosaveplus.commands.CmdSave;
+import net.dmulloy2.autosaveplus.handlers.AutoSaveHandler;
+import net.dmulloy2.autosaveplus.handlers.CommandHandler;
+import net.dmulloy2.autosaveplus.handlers.LogHandler;
+import net.dmulloy2.autosaveplus.handlers.PermissionHandler;
 import net.dmulloy2.autosaveplus.util.FormatUtil;
 
-import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -33,31 +38,37 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class AutoSavePlus extends JavaPlugin
 {
-	private @Getter AutoSaveManager autoSaveManager;
+	private @Getter AutoSaveHandler autoSaveHandler;
 	
-	public String start, finish, prefix;
-	public boolean debug, logAllWorlds;
-	public int delay;
+	private @Getter PermissionHandler permissionHandler;
+	private @Getter CommandHandler commandHandler;
+	private @Getter LogHandler logHandler;
+	
+	private @Getter String prefix = FormatUtil.format("&6[&4&lASP&6] ");
 	
 	@Override
 	public void onEnable()
 	{
 		long start = System.currentTimeMillis();
 		
-		autoSaveManager = new AutoSaveManager(this);
-		
-		prefix = ChatColor.GOLD + "[AutoSavePlus] ";
-
-		/**Set command executor**/
-		getCommand("asp").setExecutor(new AutoSavePlusCommand (this));
-		
-		/**Save/Load config**/
 		saveDefaultConfig();
-		loadConfig();
 
-		/**Schedule AutoSave task**/
-		int delaym = delay * 20 * 60;
-		new AutoSaveTask().runTaskTimer(this, delaym, delaym);
+		/** Register Handlers **/
+		autoSaveHandler = new AutoSaveHandler(this);
+
+		permissionHandler = new PermissionHandler(this);
+		commandHandler = new CommandHandler(this);
+		logHandler = new LogHandler(this);
+		
+		/** Register Commands **/
+		commandHandler.setCommandPrefix("asp");
+		commandHandler.registerCommand(new CmdHelp(this));
+		commandHandler.registerCommand(new CmdReload(this));
+		commandHandler.registerCommand(new CmdSave(this));
+
+		/** Schedule AutoSave task **/
+		int delay = getConfig().getInt("delay", 15) * 20 * 60;
+		new AutoSaveTask().runTaskTimer(this, delay, delay);
 		
 		long finish = System.currentTimeMillis();
 
@@ -69,9 +80,8 @@ public class AutoSavePlus extends JavaPlugin
 	{
 		long start = System.currentTimeMillis();
 		
-		autoSaveManager.run();
-		
-		/**Cancel AutoSave task**/
+		autoSaveHandler.run();
+
 		getServer().getScheduler().cancelTasks(this);
 		
 		long finish = System.currentTimeMillis();
@@ -79,47 +89,29 @@ public class AutoSavePlus extends JavaPlugin
 		outConsole("{0} has been disabled ({1}ms)", getDescription().getFullName(), finish - start);
 	}
 	
-	/**Console Logging**/
-	public void outConsole(String string, Object... objects)
-	{
-		outConsole(Level.INFO, string, objects);
-	}
-	
+	/** Console Logging **/
 	public void outConsole(Level level, String string, Object... objects)
 	{
-		getLogger().log(level, FormatUtil.getLogString(string, objects));
+		logHandler.log(level, string, objects);
 	}
 	
-	public void debug(String string, Object... objects)
+	public void outConsole(String string, Object... objects)
 	{
-		if (debug)
-			outConsole("[Debug] " + string, objects);
-	}
-	
-	/**Load Configuration**/
-	public void loadConfig()
-	{
-		start = getConfig().getString("start");
-		finish = getConfig().getString("finish");
-		delay = getConfig().getInt("delay");
-	    debug = getConfig().getBoolean("debug");
-	    logAllWorlds = getConfig().getBoolean("logAllWorlds");
+		logHandler.log(string, objects);
 	}
 
-	/**Reload the Plugin**/
-	public void reload()
+	public void debug(String string, Object... objects)
 	{
-		reloadConfig();
-		loadConfig();
+		logHandler.debug(string, objects);
 	}
-	
-	/**AutoSave Task**/
+
+	/** AutoSave Task **/
 	public class AutoSaveTask extends BukkitRunnable
 	{
 		@Override
 		public void run() 
 		{
-			autoSaveManager.run();
+			autoSaveHandler.run();
 		}
 	}
 }
