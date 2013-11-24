@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import net.dmulloy2.autosaveplus.AutoSavePlus;
 import net.dmulloy2.autosaveplus.types.Permission;
 import net.dmulloy2.autosaveplus.util.FormatUtil;
+import net.dmulloy2.autosaveplus.util.Util;
 
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.command.Command;
@@ -40,7 +41,6 @@ public abstract class AutoSavePlusCommand implements CommandExecutor
 	public AutoSavePlusCommand(AutoSavePlus plugin)
 	{
 		this.plugin = plugin;
-
 		this.requiredArgs = new ArrayList<String>(2);
 		this.optionalArgs = new ArrayList<String>(2);
 		this.aliases = new ArrayList<String>(2);
@@ -66,23 +66,31 @@ public abstract class AutoSavePlusCommand implements CommandExecutor
 			err("You must be a player to execute this command!");
 			return;
 		}
-		
+
 		if (requiredArgs.size() > args.length)
 		{
 			invalidArgs();
 			return;
 		}
-		
+
 		if (! hasPermission())
 		{
 			err("You do not have permission to perform this command!");
 			log(Level.WARNING, sender.getName() + " was denied access to a command!");
 			return;
 		}
-		
-		perform();
+
+		try
+		{
+			perform();
+		}
+		catch (Throwable e)
+		{
+			err("Error executing command: {0}", e.getMessage());
+			plugin.getLogHandler().debug(Util.getUsefulStack(e, "executing command " + name));
+		}
 	}
-	
+
 	public abstract void perform();
 
 	protected final boolean isPlayer()
@@ -139,7 +147,7 @@ public abstract class AutoSavePlusCommand implements CommandExecutor
 	{
 		sender.sendMessage(FormatUtil.format(message, objects));
 	}
-	
+
 	protected final void err(String string, Object... objects)
 	{
 		sendpMessage("&c" + string, objects);
@@ -164,7 +172,7 @@ public abstract class AutoSavePlusCommand implements CommandExecutor
 	{
 		plugin.debug(string, objects);
 	}
-	
+
 	protected final String capitalize(String string)
 	{
 		return WordUtils.capitalize(string);

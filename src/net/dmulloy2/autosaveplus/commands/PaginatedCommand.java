@@ -11,14 +11,13 @@ import net.dmulloy2.autosaveplus.AutoSavePlus;
 
 public abstract class PaginatedCommand extends AutoSavePlusCommand
 {
+	protected int linesPerPage = 10;
+	protected int pageArgIndex = 0;
+
 	public PaginatedCommand(AutoSavePlus plugin)
 	{
 		super(plugin);
 	}
-
-	protected int linesPerPage = 10;
-
-	int pageArgIndex = 0;
 
 	@Override
 	public void perform()

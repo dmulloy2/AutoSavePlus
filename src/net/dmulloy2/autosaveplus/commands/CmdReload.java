@@ -2,12 +2,13 @@ package net.dmulloy2.autosaveplus.commands;
 
 import net.dmulloy2.autosaveplus.AutoSavePlus;
 import net.dmulloy2.autosaveplus.types.Permission;
+import net.dmulloy2.autosaveplus.types.Reloadable;
 
 /**
  * @author dmulloy2
  */
 
-public class CmdReload extends AutoSavePlusCommand
+public class CmdReload extends AutoSavePlusCommand implements Reloadable
 {
 	public CmdReload(AutoSavePlus plugin)
 	{
@@ -16,21 +17,23 @@ public class CmdReload extends AutoSavePlusCommand
 		this.aliases.add("rl");
 		this.description = "reload AutoSavePlus";
 		this.permission = Permission.RELOAD;
-
-		this.mustBePlayer = false;
 	}
 
 	@Override
 	public void perform()
 	{
+		reload();
+	}
+
+	@Override
+	public void reload()
+	{
 		sendMessage("&aReloading AutoSavePlus...");
 
 		long start = System.currentTimeMillis();
 
-		plugin.reloadConfig();
+		plugin.reload();
 
-		long finish = System.currentTimeMillis();
-
-		sendMessage("&aReload Complete! Took {0} ms!", finish - start);
+		sendMessage("&aReload Complete! Took {0} ms!", System.currentTimeMillis() - start);
 	}
 }

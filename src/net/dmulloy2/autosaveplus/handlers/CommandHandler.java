@@ -25,7 +25,7 @@ public class CommandHandler implements CommandExecutor
 	public CommandHandler(final AutoSavePlus plugin)
 	{
 		this.plugin = plugin;
-		registeredCommands = new ArrayList<AutoSavePlusCommand>();
+		this.registeredCommands = new ArrayList<AutoSavePlusCommand>();
 	}
 
 	public void registerCommand(AutoSavePlusCommand command)

@@ -3,6 +3,10 @@ package net.dmulloy2.autosaveplus.commands;
 import net.dmulloy2.autosaveplus.AutoSavePlus;
 import net.dmulloy2.autosaveplus.types.Permission;
 
+/**
+ * @author dmulloy2
+ */
+
 public class CmdSave extends AutoSavePlusCommand
 {
 	public CmdSave(AutoSavePlus plugin)
