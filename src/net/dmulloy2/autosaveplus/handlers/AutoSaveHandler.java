@@ -2,9 +2,9 @@ package net.dmulloy2.autosaveplus.handlers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import net.dmulloy2.autosaveplus.AutoSavePlus;
+import net.dmulloy2.autosaveplus.types.Reloadable;
 import net.dmulloy2.autosaveplus.util.FormatUtil;
 
 import org.bukkit.World;
@@ -13,69 +13,72 @@ import org.bukkit.World;
  * @author dmulloy2
  */
 
-public class AutoSaveHandler 
+public class AutoSaveHandler implements Reloadable
 {
+	private List<String> worlds;
+	private boolean logAllWorlds;
+	private String start;
+	private String finish;
+
 	private final AutoSavePlus plugin;
 	public AutoSaveHandler(AutoSavePlus plugin)
 	{
 		this.plugin = plugin;
+		this.reload(); // Relod config
 	}
 
-	/** Run Save **/
-	public void run()
+	public final void save()
 	{
 		long start = System.currentTimeMillis();
-		
+
 		plugin.outConsole("Saving worlds and player data!");
-		
-		plugin.getServer().broadcastMessage(FormatUtil.format(plugin.getConfig().getString("start")));
-		
-		List<String> worlds = plugin.getConfig().getStringList("worlds");
-		for (String string : worlds)
+		plugin.getServer().broadcastMessage(this.start);
+
+		for (World world : getWorlds())
 		{
-			World world = plugin.getServer().getWorld(string);
-			if (world != null)
+			if (logAllWorlds)
 			{
-				if (plugin.getConfig().getBoolean("logAllWorlds", false))
-				{
-					plugin.outConsole("Saving world: " + world.getName());
-				}
-				
-				world.save();
+				plugin.outConsole("Saving world {0}", world.getName());
 			}
-			else
-			{
-				plugin.outConsole(Level.WARNING, "Could not save World \"{0}\". Does it exist?", string);
-			}
+
+			world.save();
 		}
-		
-		if (plugin.getConfig().getBoolean("logAllWorlds", false))
+
+		if (logAllWorlds)
 		{
 			plugin.outConsole("Saving players");
 		}
-		
+
 		plugin.getServer().savePlayers();
-		
-		plugin.getServer().broadcastMessage(FormatUtil.format(plugin.getConfig().getString("finish")));
-		
+
+		plugin.getServer().broadcastMessage(this.finish);
 		plugin.outConsole("Save complete. Took {0} ms!", System.currentTimeMillis() - start);
 	}
-	
-	public List<World> getWorlds()
+
+	private final List<World> getWorlds()
 	{
-		if (plugin.getConfig().getStringList("worlds").get(0).equals("*")) 
+		if (worlds.isEmpty() || worlds.get(0).equals("*"))
 		{
 			return plugin.getServer().getWorlds();
 		}
-		
-		List<World> worlds = new ArrayList<World>();
-		for (String s : plugin.getConfig().getStringList("worlds"))
+
+		List<World> ret = new ArrayList<World>();
+		for (String s : worlds)
 		{
 			World world = plugin.getServer().getWorld(s);
 			if (world != null)
-				worlds.add(world);
+				ret.add(world);
 		}
-		
-		return worlds;
+
+		return ret;
+	}
+
+	@Override
+	public void reload()
+	{
+		this.worlds = plugin.getConfig().getStringList("worlds");
+		this.logAllWorlds = plugin.getConfig().getBoolean("logAllWorlds", false);
+		this.start = FormatUtil.format(plugin.getConfig().getString("start"));
+		this.finish = FormatUtil.format(plugin.getConfig().getString("finish"));
 	}
 }

@@ -51,15 +51,15 @@ public class AutoSavePlus extends JavaPlugin implements Reloadable
 	{
 		long start = System.currentTimeMillis();
 
+		/** Configuration **/
 		saveDefaultConfig();
 		reloadConfig();
 
 		/** Register Handlers **/
-		autoSaveHandler = new AutoSaveHandler(this);
-
-		permissionHandler = new PermissionHandler(this);
-		commandHandler = new CommandHandler(this);
 		logHandler = new LogHandler(this);
+		permissionHandler = new PermissionHandler(this);
+		autoSaveHandler = new AutoSaveHandler(this);
+		commandHandler = new CommandHandler(this);
 
 		/** Register Commands **/
 		commandHandler.setCommandPrefix("asp");
@@ -71,9 +71,7 @@ public class AutoSavePlus extends JavaPlugin implements Reloadable
 		int delay = getConfig().getInt("delay", 15) * 20 * 60;
 		new AutoSaveTask().runTaskTimer(this, delay, delay);
 
-		long finish = System.currentTimeMillis();
-
-		outConsole("{0} has been enabled ({1}ms)", getDescription().getFullName(), finish - start);
+		outConsole("{0} has been enabled ({1}ms)", getDescription().getFullName(), System.currentTimeMillis() - start);
 	}
 
 	@Override
@@ -81,13 +79,11 @@ public class AutoSavePlus extends JavaPlugin implements Reloadable
 	{
 		long start = System.currentTimeMillis();
 
-		autoSaveHandler.run();
-
 		getServer().getScheduler().cancelTasks(this);
 
-		long finish = System.currentTimeMillis();
+		autoSaveHandler.save();
 
-		outConsole("{0} has been disabled ({1}ms)", getDescription().getFullName(), finish - start);
+		outConsole("{0} has been disabled ({1}ms)", getDescription().getFullName(), System.currentTimeMillis() - start);
 	}
 
 	/** Console Logging **/
@@ -112,7 +108,7 @@ public class AutoSavePlus extends JavaPlugin implements Reloadable
 		@Override
 		public void run()
 		{
-			autoSaveHandler.run();
+			autoSaveHandler.save();
 		}
 	}
 
@@ -120,5 +116,7 @@ public class AutoSavePlus extends JavaPlugin implements Reloadable
 	public void reload()
 	{
 		reloadConfig();
+		
+		autoSaveHandler.reload();
 	}
 }

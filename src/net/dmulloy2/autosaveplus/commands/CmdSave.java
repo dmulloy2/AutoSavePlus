@@ -23,6 +23,6 @@ public class CmdSave extends AutoSavePlusCommand
 	{
 		sendpMessage("&aSaving all worlds!");
 		
-		plugin.getAutoSaveHandler().run();
+		plugin.getAutoSaveHandler().save();
 	}
 }
