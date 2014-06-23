@@ -2,7 +2,7 @@ package net.dmulloy2.autosaveplus.commands;
 
 import net.dmulloy2.autosaveplus.AutoSavePlus;
 import net.dmulloy2.autosaveplus.types.Permission;
-import net.dmulloy2.autosaveplus.types.Reloadable;
+import net.dmulloy2.types.Reloadable;
 
 /**
  * @author dmulloy2

@@ -17,34 +17,29 @@
  */
 package net.dmulloy2.autosaveplus;
 
-import java.util.logging.Level;
-
 import lombok.Getter;
-import net.dmulloy2.autosaveplus.commands.CmdHelp;
+import net.dmulloy2.SwornPlugin;
 import net.dmulloy2.autosaveplus.commands.CmdReload;
 import net.dmulloy2.autosaveplus.commands.CmdSave;
 import net.dmulloy2.autosaveplus.handlers.AutoSaveHandler;
-import net.dmulloy2.autosaveplus.handlers.CommandHandler;
-import net.dmulloy2.autosaveplus.handlers.LogHandler;
-import net.dmulloy2.autosaveplus.handlers.PermissionHandler;
-import net.dmulloy2.autosaveplus.types.Reloadable;
-import net.dmulloy2.autosaveplus.util.FormatUtil;
+import net.dmulloy2.commands.CmdHelp;
+import net.dmulloy2.handlers.CommandHandler;
+import net.dmulloy2.handlers.LogHandler;
+import net.dmulloy2.handlers.PermissionHandler;
+import net.dmulloy2.types.Reloadable;
+import net.dmulloy2.util.FormatUtil;
 
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * @author dmulloy2
  */
 
-public class AutoSavePlus extends JavaPlugin implements Reloadable
+public class AutoSavePlus extends SwornPlugin implements Reloadable
 {
-	private @Getter PermissionHandler permissionHandler;
 	private @Getter AutoSaveHandler autoSaveHandler;
-	private @Getter CommandHandler commandHandler;
-	private @Getter LogHandler logHandler;
 
-	private @Getter String prefix = FormatUtil.format("&6[&4&lASP&6] ");
+	private @Getter String prefix = FormatUtil.format("&3[&eAutoSave&3]&e ");
 
 	@Override
 	public void onEnable()
@@ -63,15 +58,15 @@ public class AutoSavePlus extends JavaPlugin implements Reloadable
 
 		/** Register Commands **/
 		commandHandler.setCommandPrefix("asp");
-		commandHandler.registerCommand(new CmdHelp(this));
-		commandHandler.registerCommand(new CmdReload(this));
-		commandHandler.registerCommand(new CmdSave(this));
+		commandHandler.registerPrefixedCommand(new CmdHelp(this));
+		commandHandler.registerPrefixedCommand(new CmdReload(this));
+		commandHandler.registerPrefixedCommand(new CmdSave(this));
 
 		/** Schedule AutoSave task **/
 		int delay = getConfig().getInt("delay", 15) * 20 * 60;
 		new AutoSaveTask().runTaskTimer(this, delay, delay);
 
-		outConsole("{0} has been enabled ({1}ms)", getDescription().getFullName(), System.currentTimeMillis() - start);
+		logHandler.log("{0} has been enabled ({1}ms)", getDescription().getFullName(), System.currentTimeMillis() - start);
 	}
 
 	@Override
@@ -83,23 +78,7 @@ public class AutoSavePlus extends JavaPlugin implements Reloadable
 
 		autoSaveHandler.save();
 
-		outConsole("{0} has been disabled ({1}ms)", getDescription().getFullName(), System.currentTimeMillis() - start);
-	}
-
-	/** Console Logging **/
-	public void outConsole(Level level, String string, Object... objects)
-	{
-		logHandler.log(level, string, objects);
-	}
-
-	public void outConsole(String string, Object... objects)
-	{
-		logHandler.log(string, objects);
-	}
-
-	public void debug(String string, Object... objects)
-	{
-		logHandler.debug(string, objects);
+		logHandler.log("{0} has been disabled ({1}ms)", getDescription().getFullName(), System.currentTimeMillis() - start);
 	}
 
 	/** AutoSave Task **/
@@ -116,7 +95,7 @@ public class AutoSavePlus extends JavaPlugin implements Reloadable
 	public void reload()
 	{
 		reloadConfig();
-		
+
 		autoSaveHandler.reload();
 	}
 }

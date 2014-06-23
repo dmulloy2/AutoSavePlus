@@ -5,10 +5,12 @@
 delay: 15
 
 # Messages broadcast to the server when save occurs
+# This supports color codes
 start: '&d[Server] **Saving all worlds and player data**'
 finish: '&d[Server] **Save Complete!**'
 
 # Worlds to save
+# If '*' is an element, all worlds are saved
 worlds:
 - "*"
   

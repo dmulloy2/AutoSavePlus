@@ -1,23 +1,21 @@
 package net.dmulloy2.autosaveplus.types;
 
+import lombok.Getter;
+import net.dmulloy2.types.IPermission;
+
 /**
  * @author dmulloy2
  */
 
-public enum Permission
+@Getter
+public enum Permission implements IPermission
 {
 	RELOAD,
 	SAVE;
 
 	public final String node;
-
-	Permission()
+	private Permission()
 	{
 		this.node = toString().toLowerCase().replaceAll("_", ".");
-	}
-
-	public String getNode()
-	{
-		return this.node;
 	}
 }

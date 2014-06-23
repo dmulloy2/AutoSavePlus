@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.dmulloy2.autosaveplus.AutoSavePlus;
-import net.dmulloy2.autosaveplus.types.Reloadable;
-import net.dmulloy2.autosaveplus.util.FormatUtil;
+import net.dmulloy2.types.Reloadable;
+import net.dmulloy2.util.FormatUtil;
 
 import org.bukkit.World;
 
@@ -31,14 +31,14 @@ public class AutoSaveHandler implements Reloadable
 	{
 		long start = System.currentTimeMillis();
 
-		plugin.outConsole("Saving worlds and player data!");
+		plugin.getLogHandler().log("Saving worlds and player data!");
 		plugin.getServer().broadcastMessage(this.start);
 
 		for (World world : getWorlds())
 		{
 			if (logAllWorlds)
 			{
-				plugin.outConsole("Saving world {0}", world.getName());
+				plugin.getLogHandler().log("Saving world {0}", world.getName());
 			}
 
 			world.save();
@@ -46,13 +46,13 @@ public class AutoSaveHandler implements Reloadable
 
 		if (logAllWorlds)
 		{
-			plugin.outConsole("Saving players");
+			plugin.getLogHandler().log("Saving players");
 		}
 
 		plugin.getServer().savePlayers();
 
 		plugin.getServer().broadcastMessage(this.finish);
-		plugin.outConsole("Save complete. Took {0} ms!", System.currentTimeMillis() - start);
+		plugin.getLogHandler().log("Save complete. Took {0} ms!", System.currentTimeMillis() - start);
 	}
 
 	private final List<World> getWorlds()
