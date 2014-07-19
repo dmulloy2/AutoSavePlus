@@ -25,7 +25,7 @@ public class CmdSave extends AutoSavePlusCommand
 	{
 		if (args.length == 0)
 		{
-			sendpMessage("&aSaving all worlds!");
+			sendpMessage("Saving all worlds!");
 			plugin.getAutoSaveHandler().save();
 		}
 		else

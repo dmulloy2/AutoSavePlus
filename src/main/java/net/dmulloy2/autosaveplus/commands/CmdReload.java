@@ -28,12 +28,12 @@ public class CmdReload extends AutoSavePlusCommand implements Reloadable
 	@Override
 	public void reload()
 	{
-		sendMessage("&aReloading AutoSavePlus...");
+		sendMessage("Reloading AutoSavePlus...");
 
 		long start = System.currentTimeMillis();
 
 		plugin.reload();
 
-		sendMessage("&aReload Complete! Took {0} ms!", System.currentTimeMillis() - start);
+		sendMessage("Reload Complete! Took &b{0} &ems!", System.currentTimeMillis() - start);
 	}
 }
