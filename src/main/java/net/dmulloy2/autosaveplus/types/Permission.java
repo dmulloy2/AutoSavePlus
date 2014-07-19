@@ -11,7 +11,8 @@ import net.dmulloy2.types.IPermission;
 public enum Permission implements IPermission
 {
 	RELOAD,
-	SAVE;
+	SAVE,
+	;
 
 	public final String node;
 	private Permission()

@@ -13,9 +13,9 @@ finish: '&d[Server] **Save Complete!**'
 # If '*' is an element, all worlds are saved
 worlds:
 - "*"
-  
+
 # Extra output to console
 debug: false
 
-# Log the saving of players and worlds (does not affect broadcasts)
-logAllWorlds: true
+# Logs each individual world as it's saved
+logAllWorlds: false

@@ -14,5 +14,6 @@ public abstract class AutoSavePlusCommand extends Command
 	{
 		super(plugin);
 		this.plugin = plugin;
+		this.usesPrefix = true;
 	}
 }

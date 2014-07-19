@@ -24,7 +24,7 @@ public class AutoSaveHandler implements Reloadable
 	public AutoSaveHandler(AutoSavePlus plugin)
 	{
 		this.plugin = plugin;
-		this.reload(); // Relod config
+		this.reload(); // Reload config
 	}
 
 	public final void save()
@@ -62,7 +62,7 @@ public class AutoSaveHandler implements Reloadable
 			return plugin.getServer().getWorlds();
 		}
 
-		List<World> ret = new ArrayList<World>();
+		List<World> ret = new ArrayList<>();
 		for (String s : worlds)
 		{
 			World world = plugin.getServer().getWorld(s);
