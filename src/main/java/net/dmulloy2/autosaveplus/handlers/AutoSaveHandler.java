@@ -1,3 +1,6 @@
+/**
+ * (c) 2014 dmulloy2
+ */
 package net.dmulloy2.autosaveplus.handlers;
 
 import java.util.ArrayList;
@@ -15,10 +18,10 @@ import org.bukkit.World;
 
 public class AutoSaveHandler implements Reloadable
 {
+	private String startMessage;
+	private String finishMessage;
 	private List<String> worlds;
-	private boolean logAllWorlds;
-	private String start;
-	private String finish;
+	private boolean verbose;
 
 	private final AutoSavePlus plugin;
 	public AutoSaveHandler(AutoSavePlus plugin)
@@ -32,35 +35,29 @@ public class AutoSaveHandler implements Reloadable
 		long start = System.currentTimeMillis();
 
 		plugin.getLogHandler().log("Saving worlds and player data!");
-		plugin.getServer().broadcastMessage(this.start);
+		plugin.getServer().broadcastMessage(startMessage);
 
 		for (World world : getWorlds())
 		{
-			if (logAllWorlds)
-			{
+			if (verbose)
 				plugin.getLogHandler().log("Saving world {0}", world.getName());
-			}
 
 			world.save();
 		}
 
-		if (logAllWorlds)
-		{
+		if (verbose)
 			plugin.getLogHandler().log("Saving players");
-		}
 
 		plugin.getServer().savePlayers();
 
-		plugin.getServer().broadcastMessage(this.finish);
+		plugin.getServer().broadcastMessage(finishMessage);
 		plugin.getLogHandler().log("Save complete. Took {0} ms!", System.currentTimeMillis() - start);
 	}
 
 	private final List<World> getWorlds()
 	{
 		if (worlds.isEmpty() || worlds.get(0).equals("*"))
-		{
 			return plugin.getServer().getWorlds();
-		}
 
 		List<World> ret = new ArrayList<>();
 		for (String s : worlds)
@@ -77,8 +74,8 @@ public class AutoSaveHandler implements Reloadable
 	public void reload()
 	{
 		this.worlds = plugin.getConfig().getStringList("worlds");
-		this.logAllWorlds = plugin.getConfig().getBoolean("logAllWorlds", false);
-		this.start = FormatUtil.format(plugin.getConfig().getString("start"));
-		this.finish = FormatUtil.format(plugin.getConfig().getString("finish"));
+		this.verbose = plugin.getConfig().getBoolean("verbose", false);
+		this.startMessage = FormatUtil.format(plugin.getConfig().getString("start"));
+		this.finishMessage = FormatUtil.format(plugin.getConfig().getString("finish"));
 	}
 }

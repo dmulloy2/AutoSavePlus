@@ -39,7 +39,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class AutoSavePlus extends SwornPlugin implements Reloadable
 {
 	private @Getter AutoSaveHandler autoSaveHandler;
-
 	private @Getter String prefix = FormatUtil.format("&3[&eAutoSave&3]&e ");
 
 	@Override
@@ -64,7 +63,7 @@ public class AutoSavePlus extends SwornPlugin implements Reloadable
 		commandHandler.registerPrefixedCommand(new CmdSave(this));
 		commandHandler.registerPrefixedCommand(new CmdVersion(this));
 
-		/** Schedule AutoSave task **/
+		/** Schedule Auto-Save task **/
 		int delay = getConfig().getInt("delay", 15) * 20 * 60;
 		new AutoSaveTask().runTaskTimer(this, delay, delay);
 
@@ -83,7 +82,9 @@ public class AutoSavePlus extends SwornPlugin implements Reloadable
 		logHandler.log("{0} has been disabled ({1}ms)", getDescription().getFullName(), System.currentTimeMillis() - start);
 	}
 
-	/** AutoSave Task **/
+	/**
+	 * Auto-Save Task
+	 */
 	public class AutoSaveTask extends BukkitRunnable
 	{
 		@Override
@@ -93,11 +94,13 @@ public class AutoSavePlus extends SwornPlugin implements Reloadable
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void reload()
 	{
 		reloadConfig();
-
 		autoSaveHandler.reload();
 	}
 }

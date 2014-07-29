@@ -1,14 +1,16 @@
+/**
+ * (c) 2014 dmulloy2
+ */
 package net.dmulloy2.autosaveplus.commands;
 
 import net.dmulloy2.autosaveplus.AutoSavePlus;
 import net.dmulloy2.autosaveplus.types.Permission;
-import net.dmulloy2.types.Reloadable;
 
 /**
  * @author dmulloy2
  */
 
-public class CmdReload extends AutoSavePlusCommand implements Reloadable
+public class CmdReload extends AutoSavePlusCommand
 {
 	public CmdReload(AutoSavePlus plugin)
 	{
@@ -22,15 +24,8 @@ public class CmdReload extends AutoSavePlusCommand implements Reloadable
 	@Override
 	public void perform()
 	{
-		reload();
-	}
-
-	@Override
-	public void reload()
-	{
-		sendMessage("Reloading AutoSavePlus...");
-
 		long start = System.currentTimeMillis();
+		sendMessage("Reloading AutoSavePlus...");
 
 		plugin.reload();
 

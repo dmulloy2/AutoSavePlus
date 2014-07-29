@@ -1,3 +1,6 @@
+/**
+ * (c) 2014 dmulloy2
+ */
 package net.dmulloy2.autosaveplus.commands;
 
 import net.dmulloy2.autosaveplus.AutoSavePlus;
@@ -27,19 +30,18 @@ public class CmdSave extends AutoSavePlusCommand
 		{
 			sendpMessage("Saving all worlds!");
 			plugin.getAutoSaveHandler().save();
+			return;
 		}
-		else
-		{
-			World world = plugin.getServer().getWorld(args[0]);
-			if (world == null)
-			{
-				err("World \"&c{0}&4\" not found!", args[0]);
-				return;
-			}
 
-			sendpMessage("Saving world &b{0}&e!", world.getName());
-			world.save();
-			sendpMessage("World saved!");
+		World world = plugin.getServer().getWorld(args[0]);
+		if (world == null)
+		{
+			err("World \"&c{0}&4\" not found!", args[0]);
+			return;
 		}
+
+		sendpMessage("Saving world &b{0}&e!", world.getName());
+		world.save();
+		sendpMessage("World saved!");
 	}
 }
