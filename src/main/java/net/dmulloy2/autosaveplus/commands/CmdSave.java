@@ -18,7 +18,7 @@ public class CmdSave extends AutoSavePlusCommand
 	{
 		super(plugin);
 		this.name = "save";
-		this.optionalArgs.add("world");
+		this.addOptionalArg("world");
 		this.description = "Saves all worlds";
 		this.permission = Permission.SAVE;
 	}
