@@ -27,7 +27,6 @@ import net.dmulloy2.commands.CmdHelp;
 import net.dmulloy2.handlers.CommandHandler;
 import net.dmulloy2.handlers.LogHandler;
 import net.dmulloy2.handlers.PermissionHandler;
-import net.dmulloy2.types.Reloadable;
 import net.dmulloy2.util.FormatUtil;
 
 import org.bukkit.scheduler.BukkitRunnable;
@@ -36,7 +35,7 @@ import org.bukkit.scheduler.BukkitRunnable;
  * @author dmulloy2
  */
 
-public class AutoSavePlus extends SwornPlugin implements Reloadable
+public class AutoSavePlus extends SwornPlugin
 {
 	private @Getter AutoSaveHandler autoSaveHandler;
 	private @Getter String prefix = FormatUtil.format("&3[&eAutoSave&3]&e ");
