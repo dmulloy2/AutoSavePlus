@@ -1,6 +1,6 @@
 name: AutoSavePlus
 main: net.dmulloy2.autosaveplus.AutoSavePlus
-version: ${project.version} (Build ${project.build.number})
+version: ${project.version}${project.build.number}
 author: dmulloy2
 description: Simple AutoSave plugin allowing the saving of individual worlds, defined in the configuration.
 commands:
